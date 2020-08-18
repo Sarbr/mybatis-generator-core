@@ -10,7 +10,6 @@
 /**
  * @date 2020-07-20 10:34:24
  * @author sarbr
- * alter table table_test comment '测试';
  */
 @Getter
 @Setter
