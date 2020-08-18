@@ -1,14 +1,14 @@
 package org.mybatis.generator.internal;
+
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
-import org.mybatis.generator.config.TableConfiguration;
 import org.mybatis.generator.internal.util.StringUtility;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Properties;
@@ -52,15 +52,9 @@ public class DefaultCommentGenerator implements CommentGenerator {
     @Override
     public void addModelClassComment(TopLevelClass topLevelClass,
                                      IntrospectedTable introspectedTable) {
-        final TableConfiguration tableConfiguration = introspectedTable.getTableConfiguration();
-        final String tableName = tableConfiguration.getTableName();
-        final String tableComment = tableConfiguration.getTableComment();
         topLevelClass.addJavaDocLine("/**");
-        topLevelClass.addJavaDocLine(" * @date " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        //topLevelClass.addJavaDocLine(" * 实体名称: " );
-        //topLevelClass.addJavaDocLine(" * 表名: " + introspectedTable.getFullyQualifiedTable().toString());
+        topLevelClass.addJavaDocLine(" * @date " + LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         topLevelClass.addJavaDocLine(" * @author " + System.getProperty("user.name"));
-        topLevelClass.addJavaDocLine(" * alter table "+tableName+" comment" + " '" + tableComment +"';");
         topLevelClass.addJavaDocLine(" */");
     }
 
