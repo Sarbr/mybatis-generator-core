@@ -15,15 +15,17 @@
  */
 package org.mybatis.generator.codegen.mybatis3.model;
 
-import org.mybatis.generator.api.CommentGenerator;
-import org.mybatis.generator.api.FullyQualifiedTable;
-import org.mybatis.generator.api.IntrospectedColumn;
-import org.mybatis.generator.api.Plugin;
+import org.mybatis.generator.api.*;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.RootClassInfo;
+import org.mybatis.generator.config.JDBCConnectionConfiguration;
 import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.internal.JDBCConnectionFactory;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -110,6 +112,19 @@ public class BaseRecordGenerator extends AbstractJavaGenerator {
                 topLevelClass, introspectedTable)) {
             answer.add(topLevelClass);
         }
+
+        final JDBCConnectionConfiguration jdbcConnectionConfiguration = context.getJdbcConnectionConfiguration();
+        ConnectionFactory connectionFactory = new JDBCConnectionFactory(jdbcConnectionConfiguration);
+        //执行注释脚本
+        try (final Connection connection = connectionFactory.getConnection();
+             final Statement statement = connection.createStatement()){
+            final String tableName = tableConfiguration.getTableName();
+            final String tableComment = tableConfiguration.getTableComment();
+            final String sql = String.format("alter table %s comment '%s';", tableName, tableComment);
+            statement.execute(sql);
+        } catch (SQLException ignored) {
+        }
+
         return answer;
      }
 
